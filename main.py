@@ -49,7 +49,6 @@ async def update_todo(db: db_dependency, todo_request: TodoRequest,
     todo_model = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
     if todo_model is None:
         raise HTTPException(status_code=404, detail="Todo is not found")
-
     update_data = {
         field: value
         for field, value in todo_request.dict().items()
@@ -57,4 +56,14 @@ async def update_todo(db: db_dependency, todo_request: TodoRequest,
     }
     for field, values in update_data.items():
         setattr(todo_model, field, values)
+    db.commit()
+
+
+@app.delete("/todo/delete/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete(db: db_dependency, todo_id: int = Path(gt=0)):
+    todo_model = db.query(models.Todos).get(todo_id)
+    if todo_model is None:
+        raise HTTPException(status_code=404, detail="Todo is not found")
+
+    db.delete(todo_model)
     db.commit()
