@@ -3,13 +3,15 @@ from schema import TodoRequest
 from fastapi import FastAPI, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from starlette import status
-
+from routers import auth
 import models
 from database import engine, SessionLocal
 
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
+
+app.include_router(auth.router)
 
 
 def get_db():
@@ -64,6 +66,5 @@ async def delete(db: db_dependency, todo_id: int = Path(gt=0)):
     todo_model = db.query(models.Todos).get(todo_id)
     if todo_model is None:
         raise HTTPException(status_code=404, detail="Todo is not found")
-
     db.delete(todo_model)
     db.commit()
