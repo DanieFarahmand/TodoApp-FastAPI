@@ -3,11 +3,14 @@ from schema import TodoRequest
 from fastapi import Depends, HTTPException, Path, APIRouter
 from sqlalchemy.orm import Session
 from starlette import status
-
+from routers.auth import get_current_user
 import models
 from database import SessionLocal
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/todo",
+    tags=["todo"]
+)
 
 
 def get_db():
@@ -19,6 +22,7 @@ def get_db():
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
@@ -35,8 +39,10 @@ async def read_todo(db: db_dependency, todo_id: int = Path(gt=0)):
 
 
 @router.post("/todo/create", status_code=status.HTTP_201_CREATED)
-async def create_todo(db: db_dependency, todo_request: TodoRequest):
-    todo_model = models.Todos(**todo_request.dict())
+async def create_todo(user: user_dependency, db: db_dependency, todo_request: TodoRequest):
+    if user is None:
+        raise HTTPException(status_code=401, detail="authentication is faild")
+    todo_model = models.Todos(**todo_request.dict(), owner_id=user.get("id"))
     db.add(todo_model)
     db.commit()
 
