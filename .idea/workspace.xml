@@ -12,6 +12,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -69,6 +76,7 @@
       <workItem from="1687335308025" duration="404000" />
       <workItem from="1687350036906" duration="3139000" />
       <workItem from="1687438857412" duration="709000" />
+      <workItem from="1687632678482" duration="322000" />
     </task>
     <servers />
   </component>
