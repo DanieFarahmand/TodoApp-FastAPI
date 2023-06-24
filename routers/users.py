@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path
 from starlette import status
 from models import Users
 from database import SessionLocal
+from schema import UserVerification
 from .auth import get_current_user
 from passlib.context import CryptContext
 
@@ -25,11 +26,6 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
-
-
-class UserVerification(BaseModel):
-    password: str
-    new_password: str = Field(min_length=6)
 
 
 @router.get('/', status_code=status.HTTP_200_OK)
